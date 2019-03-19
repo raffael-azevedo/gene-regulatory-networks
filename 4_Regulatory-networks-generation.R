@@ -148,4 +148,4 @@ for(i in 1:ncol(sub.tnet))
 }
 # 4.4 The steps below (save and load) are checkpoints. If is necessary to re-do the analysis, parts of the
 # data is stored in RData and can be loaded to speed up the re-analysis.
-save(regulated.genes, symbols.subtnet, file="regulatedGenes.RData")
+save(regulated.genes, symbols.subtnet, sub.tnet, file="regulatedGenes.RData")
