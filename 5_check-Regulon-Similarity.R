@@ -1,3 +1,8 @@
+# This script is not part of the gene regulatory network analysis (GRNA); Instead, this is an additional step.
+# It is only useful when working with two or more network. This is interesting when one knows which are the master regulators
+# common between two networks, and wants to identify regulated genes present in both regulons, in both networks.
+# As this 
+
 # chunk 0.1.1: get regulated genes for each network. ####
 # GSE13904
 
@@ -182,23 +187,6 @@ symbols.subtnet <- c("ZNF331","KLF12","RORA","ZNF544","GATA3","ZNF551","IRF4","G
 percentages_intersect <- percentages[names(percentages)%in%symbols.subtnet]
 barplot(sort(percentages_intersect, decreasing = T), ylim = c(0,40), las=2)
 
-# # chunk 2.1: check regulon activity of NR2E1, TRIM25 and MEF2A
-# load("~/GDrive/Doutorado/Sepsis R/Paper/SIGNATURE_GSE26378/GSE4607/RData/chunk3_TNI-TNA_analysis.RData")
-# library(RTN)
-# RegScores <- tni.gsea2(rtni)
-# heatmap(RegScores$dif[,gse_heatmap_intersect])
-# #heatmap(RegScores$dif[,gse_heatmap_intersect], Rowv = NA)
-# source("~/Repos/sepsis-regulatory-network/network-functions.R")
-# dataRTN$phenoIDs$SYMBOL <- sapply(dataRTN$phenoIDs$SYMBOL, as.character)
-# dataRTN$phenoIDs$ENTREZ <- sapply(dataRTN$phenoIDs$ENTREZ, as.character)
-# dataRTN$phenoIDs$ENTREZ <- sapply(dataRTN$phenoIDs$ENTREZ, as.numeric)
-# dataRTN$phenoIDs$PROBEID <- sapply(dataRTN$phenoIDs$PROBEID, as.character)
-# #to get FOSL2
-# dataRTN$tfs[["FOSL2"]][1] <- "218880_at"
-# g_rmap <- tni.graph(rtni, tnet="dpi", gtype="rmap", tfs=dataRTN$tfs[c("FOSL2", "JUNB", "NFKB1")])
-# graphRmap(g = g_rmap, dat = dataRTN$phenoIDs)
-# save(RegScores, file="~/GDrive/Doutorado/Sepsis R/Paper/SIGNATURE_GSE26378/GSE4607/RData/chunk2_regScores_GSE4607_regulonActivity.RData")
-
 # chunk 3: check within other diseases signatures for similarities in regulon activity ####
 library(data.table)
 outMRs <- list()
@@ -218,23 +206,6 @@ outMRs[["gse4607_sig_gse13205"]] <- symbols.subtnet[which(!symbols.subtnet%in%gs
 intersection <- Reduce(intersect, outMRs)
 barplot(sort(percentages[intersection], decreasing = T), ylim = c(0,40), las=2)
 save(commonGenes, intersection, file = "/home/raffael/GDrive/Doutorado/Sepsis R/Paper/SIGNATURE_GSE26378/validation/commonRegulons.RData")
-# # ring plot to compare percentages
-# library(ggplot2)
-# dat <- as.data.frame(fread("/home/raffael/GDrive/Doutorado/Sepsis R/Paper/SIGNATURE_GSE26378/donut.txt"))
-# 
-# dat = dat[order(dat$fraction), ]
-# dat$ymax = cumsum(dat$fraction)
-# dat$ymin = c(0, head(dat$ymax, n=-1))
-# 
-# p1 = ggplot(dat, aes(fill=regulon, ymax=ymax, ymin=ymin, xmax=4, xmin=3)) +
-#   geom_rect() +
-#   coord_polar(theta="y") +
-#   xlim(c(0, 4)) +
-#   theme(panel.grid=element_blank()) +
-#   theme(axis.text=element_blank()) +
-#   theme(axis.ticks=element_blank()) + labs(title="Fraction of genes shared") +facet_wrap(~regulon)
-# p1
-
 
 # chunk 4: compare genes within the signatures ####
 setwd("/home/raffael/GDrive/Doutorado/Sepsis R/Paper/VALIDAÇÃO/")
