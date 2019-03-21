@@ -5,7 +5,10 @@ This is an step-by-step on doing a gene regulatory analysis. Data used for this 
 Links to data specified on the scripts: 
 * [GSE4607](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE4607)
 * [GSE26378](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE26378)
-* [GSE13904](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2613904)
+* [GSE13904](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE13904)
+* [GSE13205](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE13205)
+* [GSE21942](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE21942)
+* [GSE48780](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE48780)
 
 For package installing, there is two sources: The Comprehensive R Archive Network [CRAN](https://cran.r-project.org/) and [Bioconductor](https://bioconductor.org). To install CRAN packages, on the R console, just type:
 
