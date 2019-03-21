@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Gene Regulatory Networks Generation using RTN R/Bioconductor package.
 
 This is an step-by-step on doing a gene regulatory analysis. Data used for this analysis are publicly available in Gene Expression Omnibus or Array Express. 
@@ -10,7 +15,7 @@ Links to data specified on the scripts:
 * [GSE21942](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE21942)
 * [GSE48780](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE48780)
 
-For package installing, there is two sources: The Comprehensive R Archive Network [CRAN](https://cran.r-project.org/) and [Bioconductor](https://bioconductor.org). To install CRAN packages, on the R console, just type:
+For package installing, there is two sources: The Comprehensive R Archive Network - [CRAN](https://cran.r-project.org/) - and [Bioconductor](https://bioconductor.org). To install CRAN packages, on the R console, just type:
 
 ```{r}
 install.packages("package")
@@ -23,18 +28,23 @@ BiocManager::install("package")
 ```
 The parameter `package` can be substituted by an character vector (`c()`) containing all packages to install. 
 
-R Packages used in this analysis: 
-* affy
-* limma
+R Packages used in this analysis:
+1. From CRAN
+* BiocManager
 * data.table
-* biomaRt
-* Fletcher2013b 
-* RTN
-* RedeR 
 * classInt 
 * RColorBrewer 
 * ggplot2 
 * dplyr
+* Honorable Mention: tidyverse
+
+2. From Bioconductor
+* affy
+* limma
+* biomaRt
+* Fletcher2013b 
+* RTN
+* RedeR 
 * enrichR
 
 Info: `data.table`, `dplyr`, and  `ggplot2` are part of the `tidyverse`. You are encouraged to install the entire plethora of packages from the Tidyverse and learn to work with them. They make R data analysis easier than it is with `base`.
