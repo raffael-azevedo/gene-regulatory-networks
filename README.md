@@ -3,11 +3,11 @@
 This is an step-by-step on doing a gene regulatory analysis. Data used for this analysis are publicly available in Gene Expression Omnibus or Array Express. 
 
 Links to data specified on the scripts: 
-* [GSE4607]https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE4607
-* [GSE26378]https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE26378
-* [GSE13904]https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2613904
+* [GSE4607](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE4607)
+* [GSE26378](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE26378)
+* [GSE13904](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2613904)
 
-For package installing, there is two sources: The Comprehensive R Archive Network (CRAN) and Bioconductor. To install CRAN packages, on the R console, just type:
+For package installing, there is two sources: The Comprehensive R Archive Network [CRAN](https://cran.r-project.org/) and [Bioconductor](https://bioconductor.org). To install CRAN packages, on the R console, just type:
 
 ```{r}
 install.packages("package")
