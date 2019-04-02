@@ -6,6 +6,7 @@ library(ggplot2)
 library(EnvStats)
 load("/home/raffael/GDrive/Doutorado/Sepsis R/Paper/SIGNATURE_GSE26378/validation/commonRegulons.RData")
 regulons <- commonGenes[intersection]
+regulons <- c("MEF2A", "RFX2", "TRIM25", "GATA3", "HOXB2", "KLF12", "NR3C2", "RORA", "ZKSCAN8", "ZNF134", "ZNF234", "ZNF235", "ZNF329", "ZNF331", "ZNF529")
 setwd("/home/raffael/Downloads/GSE4607_RAW/")
 data <- ReadAffy()
 exp <- rma(data)
@@ -24,7 +25,6 @@ PROBEID <- rownames(dataset)
 rownames(dataset) <- NULL
 dataset <- cbind(PROBEID, dataset)
 dataset <- merge(dataset,gpl_new,by="PROBEID")
-dataset <- dataset[,c(1,5,6,2,3,4)]
 dataset <- dataset %>% mutate_if(is.factor, as.character)
 rm(gpl_new, exp, HSexp, PROBEID,a,b,c,data)
 
@@ -51,4 +51,10 @@ for(gene in intersection){
   gene_subset <- subset(best_probes, SYMBOL == gene)
   pairwise.wilcox.test(gene_subset$value, gene_subset$tipo, p.adjust.method = "bonferroni") %>% print
 }
-ggplot(subset(best_probes, SYMBOL%in%intersection)) + geom_boxplot(aes(x = tipo, y = value)) + facet_wrap(SYMBOL~., nrow = 3,ncol = 5)
+inter <- subset(best_probes, SYMBOL%in%intersection)
+inter$SYMBOL <- factor(inter$SYMBOL, levels = regulons)
+ggplot(inter) + 
+  geom_boxplot(aes(x = tipo, y = value, fill = tipo)) + 
+  facet_wrap(SYMBOL~., nrow = 3,ncol = 5) +
+  xlab("Clinical Type") + ylab("Arbitrary Expression Units (AEUs)") + ggtitle("Master regulators expression in GSE4607") +
+  stat_compare_means(paired = F, aes(x = tipo, y = value),p.adjust.methods="fdr")
