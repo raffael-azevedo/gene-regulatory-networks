@@ -55,12 +55,22 @@ rm(b,c,gpl570)
 # Chunk 2: Differential Expression Analysis ####
 # Herein begins the differential analysis. It uses the limma package to do measurements and statistical
 # analysis. There are a few steps to do so, which are listed below.
+# 2.0) The "treats" object is either a # text file setting each sample to its condition or a construct
+# variable assigning factors to each sample name. In this case, for GSE26378 we have 21 control samples
+# and 82 cases. Therefore, the "treats" object will be a factor of each sample, assigning it either to 
+# case or control. It is easy when samples are ordered as such (first control samples, then case samples) 
+# but it is often usual to encounter samples in a disarranged list (which is this case, by the way).
+treats <- as.factor(c(rep("shock", 6), rep("control", 2), "shock", rep("control", 4),
+                      rep("shock", 26), "control", rep("shock", 8), "control", rep("shock", 13),
+                      "control", "control", rep("shock", 13), rep("control", 5), rep("shock", 12),
+                      rep("control", 6), rep("shock", 3)))
 # 2.1) This line does the model matrix, which establishes causes versus control. Based on this
-# matrix, each comparison can be made and summarized correctly. The "treats" object is either a
-# text file setting each sample to its condition or a construct variable assigning factors to each
-# sample name. model.matrix creates a design (or model) matrix, e.g., by expanding factors to a set 
-# of dummy variables (depending on the contrasts) and expanding interactions similarly.
+# matrix, each comparison can be made and summarized correctly. The base function model.matrix creates a design (or model)
+# matrix, e.g., by expanding factors to a set of dummy variables (depending on the contrasts) 
+# and expanding interactions similarly. Also we have to modify the column names because this function
+# inserts a fuzzy name. 
 design <- model.matrix(~0+treats)
+colnames(design) <- c("shock", "control")
 # 2.2) Below line uses the lmFit() function to fit linear model for each gene given a series of arrays.
 # It takes as arguments the expression matrix and the design object.
 fit <- lmFit(HSexp,design)
@@ -109,4 +119,4 @@ DEexp <- cbind(affy_hg_u133_plus_2,GSE26378)
 GSE26378 <- merge(gpl_new,DEexp,by.x = "PROBEID",by.y = "affy_hg_u133_plus_2")
 # 2.8) This line saves as a RData the dictionary file, pheno, phenoIDs and hit objects, which are needed to 
 # RTN analysis, along with the resulting DEG analysis object.
-save(GSE26378_hits,GSE26378_pheno, GSE26378,gpl_new,file="GSE26378_signature.RData")
+save(GSE26378_hits,GSE26378_pheno, GSE26378,dictionary,file="GSE26378_signature.RData")
