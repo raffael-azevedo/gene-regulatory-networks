@@ -11,7 +11,7 @@ load("chunk3_TNI-TNA_analysis_GSE4607.RData")
 rm(dataRTN,rtni,GSE4607_tree,rtna,RegScores)
 # Chunk 1: Load regulated genes. ####
 # For dataset: GSE4607 
-# 1.1) Loads the regulated genes of GSE13904
+# 1.1) Loads the regulated genes of GSE4607
 load("~/regulatedGenes.RData")
 # 1.2) Assign it to a new variable, since the variables names are the same for both datasets (by default)
 GSE4607 <- regulated.genes
@@ -35,11 +35,11 @@ mra <- cbind(PROBEID,mra)
 colnames(mra)[c(1,2,9)] <- c("PROBEID", "SYMBOL","Adjusted.Pvalue")
 # 1.6) Remember when you were told not to worry about names in regulated.genes object? Don't. We will begin to 
 # add some gene identifiers (a.k.a., gene symbols). First for GSE4607
-GSE4607_sub <- subset(regulated.genes, unlist(lapply(seq_along(regulated.genes), 
+GSE4607_sub <- subset(GSE4607, unlist(lapply(seq_along(regulated.genes), 
                                       function(x){names(regulated.genes[[x]])}))%in%mra$PROBEID)
 # 1.6.1) And further for GSE13904
 GSE13904_sub <- subset(GSE13904, unlist(lapply(seq_along(regulated.genes),
-                                      function(x){names(regulated.genes[[x]])}))%in%rownames(tna))
+                                      function(x){names(regulated.genes[[x]])}))%in%mra$PROBEID)
 # 1.7) This step is messy, because we load a RData with expression data, but only needs the gpl_new file.
 # If you are a better organized person than I, you should save the dictionary object in a different RData
 # (or even a scrip, as I did for the TFs).
