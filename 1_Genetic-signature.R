@@ -116,7 +116,7 @@ rownames(GSE26378) <- NULL
 # which holds the DEGs and its information (p-value, etc).
 DEexp <- cbind(affy_hg_u133_plus_2,GSE26378)
 # 2.7.4) Adds the information of ENTREZ and HGNC symbol to the dataset.
-GSE26378 <- merge(gpl_new,DEexp,by.x = "PROBEID",by.y = "affy_hg_u133_plus_2")
+GSE26378 <- merge(dictionary,DEexp,by.x = "PROBEID",by.y = "affy_hg_u133_plus_2")
 # 2.8) This line saves as a RData the dictionary file, pheno, phenoIDs and hit objects, which are needed to 
 # RTN analysis, along with the resulting DEG analysis object.
 save(GSE26378_hits,GSE26378_pheno, GSE26378,dictionary,file="GSE26378_signature.RData")
