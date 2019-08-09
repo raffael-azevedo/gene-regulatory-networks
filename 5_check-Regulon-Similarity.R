@@ -177,8 +177,9 @@ save(percentages, TFs, master_regulators, GSE13904_intersect, GSE4607_intersect,
 # If you take into account that sepsis is an inflammatory disease, interrogate the sepsis network with generic inflammatory signatures
 # would result in generic inflammatory master regulators. So, if they are present in the original set of master regulators, 
 # ***THEORETICALLY*** they cannot be assigned to be specific SEPSIS MASTER REGULATORS.
-# 4.1) Load the data.table package just because it is more efficient to read tabular files.
+# 4.1) Load the data.table and ggplot2 packages just because it is more efficient to read tabular files.
 library(data.table)
+library(ggplot2)
 # 4.2) Creates a list to store genes there are NOT in the below datasets.
 outMRs <- list()
 # 4.2.1) multiple sclerosis - whole blood
@@ -196,9 +197,15 @@ outMRs[["gse4607_sig_gse13205"]] <- master_regulators[which(!master_regulators%i
 # 4.3) Subset the entire list of master regulators, obtaining the final list. Notice that we came from a list > 200 of MRs
 # and finished with (theoretically) only a few specific sepsis master regulators.
 master_regulators_subset <- Reduce(intersect, outMRs)
+# 4.3.1) Transform the named numeric vector into a data.frame for ggplot2 barplot
+df <- data.frame(master_regulators = master_regulators_subset, percentages = unname(percentages[master_regulators_subset]))
 # 4.4) This is the same code that generates the barplot as in 3.2, but this time only with the MRs in the intersection. Cool, right?
-barplot(sort(percentages[master_regulators_subset], decreasing = T), ylim = c(0,40), las=2)
-# 4.5) The steps below (save and load) are checkpoints. If is necessary to re-do the analysis, parts of the
+ggplot(data=df, aes(x=reorder(master_regulators, percentages), y=percentages, )) +
+  geom_bar(stat="identity", fill="steelblue")+
+  geom_text(aes(label=round(percentages)), vjust=0.5, hjust=1.3,color="white", size=3.5)+
+  theme_minimal()+
+  coord_flip()+
+  labs(y = "% of Similarity", x = "Regulons")# 4.5) The steps below (save and load) are checkpoints. If is necessary to re-do the analysis, parts of the
 # data is stored in RData and can be loaded to speed up the re-analysis. And if you came this far, YES, I COPY-PASTE THIS. Sue me.
 save(commonGenes, master_regulators_subset, file = "~/commonRegulons.RData")
 
