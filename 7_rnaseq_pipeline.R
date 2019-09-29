@@ -45,7 +45,8 @@ for(i in files)
   colnames(counts)[1] <- temp_name
   
 }
-
+# This step does the dictionary for all ENSEMBL (blergh) IDs to Entrez and gene symbol
+# by using biomaRt default pipeline.
 library(biomaRt)
 ensembl <- useMart("ENSEMBL_MART_ENSEMBL")
 ensembl <-  useDataset("hsapiens_gene_ensembl", mart=ensembl)
@@ -54,6 +55,7 @@ annot <- getBM(attributes=c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol"),
                values = rownames(counts), 
                mart = ensembl)
 
+save(counts, annot, file = "~/gene_counts/counts.RData")
 
 
 sample_list <- read.csv("~/GDrive/Doutorado/Sepsis R/RNA-seq/SraRunTable.txt")
