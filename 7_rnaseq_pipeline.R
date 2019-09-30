@@ -6,11 +6,13 @@
 # Load required packages for file read and string manipulation
 library(data.table)
 library(stringr)
-# List all files in the directory. The loop will iterate through this
+
+# First we will load metadata about the experiment.
+metadata <- read.csv("~/GDrive/Doutorado/Sepsis R/RNA-seq/SraRunTable.txt")
+# Then list all files in the directory. The loop (below in code) will iterate through this
 files <- list.files("~/gene_counts/",pattern = "txt")
 # In this case we will remove the first entry, which will be read manually for object start (counts).
 files <- files[-1]
-
 # First reads the object as a data.frame, because f*ck data.table format.
 temp <- as.data.frame(fread("/home/raffael/gene_counts/SRR9642740.fastqAligned.sortedByCoord.out.bam_featureCounts.txt"))
 # We only want the count column, which in this case, is the 7th column.
@@ -45,6 +47,23 @@ for(i in files)
   colnames(counts)[1] <- temp_name
   
 }
+# Invert the column order of counts data.frame. Somehow I managed to append  
+# the columns backwards. 
+counts <- counts[,order(ncol(counts):1)]
+# Then we will make some sanity checks: 
+# Test wether the run name order is the same in our 
+# inverted data.frame and the original order from metadata; then, test if when 
+# we add the names, we still get the same objects. May sound stupid, but is always
+# good to be sure.
+colnames(counts)==metadata$Run
+x <- as.character(metadata$Run)
+names(x) <- metadata$patient_group
+y <- setNames(colnames(counts), metadata$patient_group)
+x==y
+names(x)==names(y)
+# Now we add to the run names the patient_groups names. There are four groups: 
+# Healthy, Critically Ill, Cancer and Sepsis. We will focus only on the Sepsis group, because of reasons.
+counts <- setNames(counts, metadata$patient_group)
 # This step does the dictionary for all ENSEMBL (blergh) IDs to Entrez and gene symbol
 # by using biomaRt default pipeline.
 library(biomaRt)
@@ -55,7 +74,5 @@ annot <- getBM(attributes=c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol"),
                values = rownames(counts), 
                mart = ensembl)
 
-save(counts, annot, file = "~/gene_counts/counts.RData")
-
-
-sample_list <- read.csv("~/GDrive/Doutorado/Sepsis R/RNA-seq/SraRunTable.txt")
+# Then we save important objects to move on with edgeR pipeline.
+save(counts, annot, metadata,file = "~/gene_counts/counts.RData")
