@@ -61,9 +61,6 @@ names(x) <- metadata$patient_group
 y <- setNames(colnames(counts), metadata$patient_group)
 x==y
 names(x)==names(y)
-# Now we add to the run names the patient_groups names. There are four groups: 
-# Healthy, Critically Ill, Cancer and Sepsis. We will focus only on the Sepsis group, because of reasons.
-counts <- setNames(counts, metadata$patient_group)
 # This step does the dictionary for all ENSEMBL (blergh) IDs to Entrez and gene symbol
 # by using biomaRt default pipeline.
 library(biomaRt)
@@ -76,3 +73,17 @@ annot <- getBM(attributes=c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol"),
 
 # Then we save important objects to move on with edgeR pipeline.
 save(counts, annot, metadata,file = "~/gene_counts/counts.RData")
+
+# First, load the edgeR package.
+library(edgeR)
+# Now make the counts object as a DGEList object, which is a specific list that edgeR works with. 
+# We also pass the patient groups as the "group" parameter.
+dge_counts <- DGEList(counts = counts, group = metadata$patient_group)
+# Then we will filter genes with low counts across all libraries.
+keep <- filterByExpr(dge_counts)
+# And further keep only the filtered genes, discarding low count ones. This step is necessary
+# in order to avoid interference
+dge_counts <- dge_counts[keep, ,keep.lib.sizes=F]
+# Next, we normalize the RNA counts in order to remove the RNA composition effect
+# in order to avoid false positive down-regulated genes.
+dge_counts <- calcNormFactors(dge_counts)
