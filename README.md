@@ -9,6 +9,7 @@ Links to data specified on the scripts:
 * [GSE13205](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE13205)
 * [GSE21942](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE21942)
 * [GSE48780](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE48780)
+* [GSE133822](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE133822)
 
 For package installing, there is two sources: The Comprehensive R Archive Network - [CRAN](https://cran.r-project.org/) - and [Bioconductor](https://bioconductor.org). To install CRAN packages, on the R console, just type:
 
@@ -31,6 +32,7 @@ R Packages used in this analysis:
 * RColorBrewer 
 * ggplot2 
 * dplyr
+* stringr
 * Honorable Mention: tidyverse
 
 2. From Bioconductor
@@ -41,6 +43,7 @@ R Packages used in this analysis:
 * RTN
 * RedeR 
 * enrichR
+* edgeR
 
 Info: `data.table`, `dplyr`, and  `ggplot2` are part of the `tidyverse`. You are encouraged to install the entire plethora of packages from the Tidyverse and learn to work with them. They make R data analysis easier than it is with `base`.
 
