@@ -82,8 +82,54 @@ dge_counts <- DGEList(counts = counts, group = metadata$patient_group)
 # Then we will filter genes with low counts across all libraries.
 keep <- filterByExpr(dge_counts)
 # And further keep only the filtered genes, discarding low count ones. This step is necessary
-# in order to avoid interference
+# in order to avoid interference.
 dge_counts <- dge_counts[keep, ,keep.lib.sizes=F]
 # Next, we normalize the RNA counts in order to remove the RNA composition effect
 # in order to avoid false positive down-regulated genes.
 dge_counts <- calcNormFactors(dge_counts)
+# For estimating differentially expressed genes, we must first provide an
+# design matrix for edgeR fit the general linear model (GLM) to the counts.
+Groups <- metadata$patient_group
+design <- model.matrix(~0+Groups)
+# Transform from raw counts to log2-counts per million (CPM).
+dge_logcpm <- cpm(dge_counts, log = T)
+# Update the .RData object with the dge_counts and the log CPM transformed counts.
+save(counts, annot, metadata, dge_counts, dge_logcpm, design, file = "~/gene_counts/counts.RData")
+# This step estimates the dispersion after data normalization, based on the design matrix.
+dge_counts <- estimateDisp(dge_counts, design)
+# By using the glmQLFit function, given raw counts, dispersions and the design matrix,
+# glmQLFit() fits the negative binomial GLM for each tag and produces an object of class DGEGLM with some new components.
+fit <- glmQLFit(dge_counts, design)
+# Get the differentially expressed genes between conditions.
+coef_test <- glmQLFTest(fit, coef = 2)
+# Generate a table with differentially expressed genes and its associated statistics.
+topper <- topTags(coef_test, n = 5000)
+# Gets only the DEG table. 5000 is an arbitrary unit. 
+DEGs <- topper$table
+# Let's make an dictionary only for the differentially expressed genes.
+ensembl <- useMart("ENSEMBL_MART_ENSEMBL")
+ensembl <-  useDataset("hsapiens_gene_ensembl", mart=ensembl)
+annot_DEGs <- getBM(attributes=c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol"), 
+               filters = "ensembl_gene_id", 
+               values = rownames(DEGs), 
+               mart = ensembl)
+
+# This is a custom function which uses the package FactoMineR to generate principal
+# component analysis. Can be modified in the future. It takes as argument the 
+# logCPM (or any other expression unit matrix) and a factor list to pass as colors and
+# labels.
+
+my_pca <- function(logcpm, contrasts)
+{
+  library(FactoMineR)
+  texp <- as.data.frame(t(logcpm))
+  tPca <- PCA(texp, graph = F)
+  scores <- tPca$ind$coord
+  lev<-levels(contrasts)
+  plot(scores[,1], scores[,2], 
+       xlab="PCA 1", ylab="PCA 2",type="p", pch=19,
+       col=1:length(lev), cex=1.0, 
+       xlim=c(min(scores[,1])*1.1, max(scores[,1])*1.1),
+       ylim=c(min(scores[,2]*1.1), max(scores[,2])*1.1))
+  text(scores[,1]-7,scores[,2]-7, contrasts,cex=0.7)
+}
