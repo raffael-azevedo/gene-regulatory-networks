@@ -149,3 +149,5 @@ my_pca <- function(logcpm, contrasts)
        ylim=c(min(scores[,2]*1.1), max(scores[,2])*1.1))
   text(scores[,1]-7,scores[,2]-7, contrasts,cex=0.7)
 }
+
+save(annot, annot_DEGs, counts, DEGs, dge_counts, dge_logcpm, metadata, topper, file = "gene_counts/SRP045500/SRP045500.RData")
