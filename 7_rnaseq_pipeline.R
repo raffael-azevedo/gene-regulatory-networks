@@ -137,9 +137,8 @@ DEGs <- inner_join(annot_DEGs, DEGs, "ensembl_gene_id")
 
 my_pca <- function(logcpm, contrasts)
 {
-  library(FactoMineR)
   texp <- as.data.frame(t(logcpm))
-  tPca <- PCA(texp, graph = F)
+  tPca <- FactoMineR::PCA(texp, graph = F)
   scores <- tPca$ind$coord
   lev<-levels(contrasts)
   plot(scores[,1], scores[,2], 
