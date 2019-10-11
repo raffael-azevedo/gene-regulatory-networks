@@ -114,6 +114,22 @@ annot_DEGs <- getBM(attributes=c("ensembl_gene_id", "entrezgene_id", "hgnc_symbo
                values = rownames(DEGs), 
                mart = ensembl)
 
+# Preparing the "gexpIDs" object for RTN analysis. First, assign the rownames as a column.
+ENSEMBL <- as.data.frame(as.character(rownames(DEGs)))
+# Rename this column to match further column name from biomaRt.
+colnames(ENSEMBL)[1] <- "ensembl_gene_id"
+# Collate both objects.
+DEGs <- cbind.data.frame(ENSEMBL, DEGs)
+# Set the rownames as NULL to avoid misuse.
+rownames(DEGs) <- NULL
+# Load the dplyr package...
+library(dplyr)
+# ... in order to make an inner join (a.k.a., merge). We will blend together
+# the DEGs data.frame and a annotation object (annot_DEGs), with matching identifiers
+# from Ensembl to HGNC Symbol and Entrez.
+DEGs <- inner_join(annot_DEGs, DEGs, "ensembl_gene_id")
+
+
 # This is a custom function which uses the package FactoMineR to generate principal
 # component analysis. Can be modified in the future. It takes as argument the 
 # logCPM (or any other expression unit matrix) and a factor list to pass as colors and
