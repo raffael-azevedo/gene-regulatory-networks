@@ -1,6 +1,6 @@
 # Gene Regulatory Networks Generation using RTN R/Bioconductor package.
 
-This is an step-by-step on doing a gene regulatory analysis. Data used for this analysis are publicly available in Gene Expression Omnibus or Array Express. 
+This is an step-by-step on doing a gene regulatory analysis. Data used for this analysis are publicly available in Sequence Read Archive (SRA-NCBI), Gene Expression Omnibus (GEO-NCBI) or Array Express. 
 
 Links to data specified on the scripts: 
 * [GSE4607](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE4607)
@@ -33,6 +33,7 @@ R Packages used in this analysis:
 * ggplot2 
 * dplyr
 * stringr
+* FactoMineR
 * Honorable Mention: tidyverse
 
 2. From Bioconductor
@@ -44,6 +45,7 @@ R Packages used in this analysis:
 * RedeR 
 * enrichR
 * edgeR
+* DESeq2
 
 Info: `data.table`, `dplyr`, and  `ggplot2` are part of the `tidyverse`. You are encouraged to install the entire plethora of packages from the Tidyverse and learn to work with them. They make R data analysis easier than it is with `base`.
 
